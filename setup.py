@@ -3,15 +3,16 @@ import os
 
 setup(
     name         = 'cheat',
-    version      = '2.2.3',
-    author       = 'Chris Lane',
-    author_email = 'chris@chris-allen-lane.com',
+    version      = '1.0',
+    author       = 'Ricky Laney',
+    author_email = 'rlaneyjr@gmail.com',
     license      = 'GPL3',
-    description  = 'cheat allows you to create and view interactive cheatsheets '
+    description  = 'This is my version of cheat completely stolen from Chris Allen Lane'
+    'cheat allows you to create and view interactive cheatsheets '
     'on the command-line. It was designed to help remind *nix system '
     'administrators of options for commands that they use frequently, but not '
     'frequently enough to remember.',
-    url          = 'https://github.com/chrisallenlane/cheat',
+    url          = 'https://github.com/rlaneyjr/cheat',
     packages     = [
         'cheat',
         'cheat.cheatsheets',
