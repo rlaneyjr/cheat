@@ -1,29 +1,34 @@
-from distutils.core import setup
+# Always prefer setuptools over distutils
+from setuptools import setup, find_packages
+# To use a consistent encoding
+from codecs import open
 import os
 
+here = os.path.abspath(os.path.dirname(__file__))
+
+# Get the long description from the relevant file
+with open(os.path.join(here, 'DESCRIPTION.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(
-    name         = 'cheat',
-    version      = '1.0',
-    author       = 'Ricky Laney',
+    name = 'cheat',
+    version = '1.0',
+    author = 'Ricky Laney',
     author_email = 'rlaneyjr@gmail.com',
-    license      = 'GPL3',
-    description  = 'This is my version of cheat completely stolen from Chris Allen Lane '
-    'cheat allows you to create and view interactive cheatsheets '
-    'on the command-line. It was designed to help remind *nix system '
-    'administrators of options for commands that they use frequently, but not '
-    'frequently enough to remember.',
-    url          = 'https://github.com/rlaneyjr/cheat',
-    packages     = [
-        'cheat',
-        'cheat.cheatsheets',
-        'cheat.test',
+    license = 'GPL3',
+    description = 'cheat allows you to create and view interactive cheatsheets',
+    long_description = long_description,
+    url = 'https://github.com/rlaneyjr/cheat',
+    packages = [
+        'cheats',
+        'cheats.cheatsheets',
+        'cheats.test',
     ],
+    install_requires = ['docopt', 'pygments'],
     package_data = {
-        'cheat.cheatsheets': [f for f in os.listdir('cheat/cheatsheets') if '.' not in f]
+        'cheats.cheatsheets': [f for f in os.listdir('cheats/cheatsheets') if '.' not in f]
     },
-    scripts          = ['bin/cheat'],
-    install_requires = [
-        'docopt >= 0.6.1',
-        'pygments >= 1.6.0',
-    ]
+    entry_points = {
+        'console_scripts': ['cheat = cheat'],
+    },
 )

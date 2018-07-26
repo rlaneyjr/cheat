@@ -1,8 +1,8 @@
 import os
 import shutil
 
-from cheat import sheets
-from cheat.utils import die, open_with_editor
+from cheats import sheets
+from cheats.utils import die, open_with_editor
 
 def copy(current_sheet_path, new_sheet_path):
     """ Copies a sheet to a new path """
