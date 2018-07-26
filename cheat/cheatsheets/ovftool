@@ -1,0 +1,93 @@
+Source Locator Examples:
+
+   /ovfs/my_vapp.ovf
+
+   /vms/my_vm.vmx
+
+   ~/my_vApprun_workspace/MyVm
+
+   vi://username:pass@localhost/my_datacenter/vm/    \
+      my_vms_folder/my_vm_name
+
+Destination Locator Examples:
+
+   /ovfs/my_vapp.ovf
+
+   /vms/my_vm.vmx
+
+   ~/my_vApprun_workspace/MyVM
+
+   vi://username:pass@localhost/my_datacenter/host/    \
+      esx01.example.com
+   vi://username:pass@localhost/my_datacenter/host/    \
+      esx01.example.com/Resources/my_resourcepool
+
+   Note: the /host/ and /Resources/ part of the above inventory path are
+         fixed and must be specified when using a vi destination locator.
+         The /Resources/ part is only used when specifying a resource
+         pool.
+
+Examples:
+
+   ovftool --vService:vDep1=provider_1 /ovfs/my_vapp.ovf
+     vi://username:pass@localhost/my_datacenter/host/esx01.example.com
+   (specify a vService dependency)
+
+   ovftool -tt=vmx /ovfs/my_vapp.ovf /vms/
+   (.ovf file to .vmx file. Result files are /vms/my_vapp/my_vapp.[vmx|vmdk])
+
+   ovftool /vms/my_vm.vmx /ovfs/my_vapp.ovf
+   (.vmx file to .ovf file. Result is put in /ovfs/my_vapp.[ovf|vmdk])
+
+   ovftool https://my_ovf_server/ovfs/my_vapp.ova /vm/my_vm.vmx
+   (.ova file to .vmx file)
+
+   ovftool /ovfs/my_vapp.ovf vi://username:pass@my_esx_host
+   (.ovf file to ESX host using default mappings)
+
+   ovftool /ovfs/my_vm.vmx vi://username:pass@my_esx_host
+   (.vmx file to ESX host using default mappings)
+
+   ovftool http://my_ovf_server/ovfs/my_vapp.ovf \
+           vi://username:pass@my_esx_host
+   (.ovf file from a web server to ESX host using defaults)
+
+   ovftool /ovfs/my_vapp.ovf \
+           vi://username:pass@my_vc_server/?ip=10.20.30.40
+   (.ovf file to vCenter server using managed ESX host ip address)
+
+   ovftool vi://username:pass@my_vc_server/my_datacenter?ds=\
+           [Storage1] foo/foo.vmx c:\ovfs\
+   (VM on ESX/vCenter server to OVF using datastore location query)
+
+   ovftool /ovfs/my_vapp.ovf \
+           vi://username:pass@my_vc_server/my_datacenter/host/my_host
+   (.ovf file to vCenter server using vCenter inventory path)
+
+   ovftool vi://username:pass@my_host/my_datacenter/vm/my_vm_folder/my_vm_name \
+           /ovfs/my_vapp.ovf
+   (VC/ESX vm to .ovf file)
+
+   ovftool /virtualmachines/MyVM.vmx \
+           ~my_vApprun_workspace/ 
+   (Imports a .vmx file into a vApprun workspace using default name)
+
+   ovftool https://my_ovflib/vm/my_vapp.ovf
+   (shows summary information about the OVF package [probe mode])
+
+   ovftool http://my_ovflib/vm/my_vapp.ovf \
+           vcloud://username:pass@my_cloud?org=MyOrg&vdc=MyVDC&catalog=MyCatalog&vapp=myVapp
+   (Imports an OVF from http into a vCloud instance and name the vApp myVapp)
+
+    ovftool http://my_ovflib/vm/my_vapp.ovf \
+           vcloud://username:pass@my_cloud?org=MyOrg&vdc=MyVDC&catalog=MyCatalog&vappTemplate=myTemplate
+   (Imports an OVF from http into a vCloud instance and create vApp template)
+
+   ovftool vi://username:pass@my_host/my_datacenter/vm/my_vm_folder/my_vm_name \
+           vcloud://username:pass@my_cloud?org=MyOrg&vdc=MyVDC&catalog=MyCatalog&vapp=myVapp
+   (Imports a VM from VI into a vCloud instance and name the vApp myVapp)
+
+   ovftool vcloud://username:pass@my_cloud?org=MyOrg&vdc=MyVDC&catalog=MyCatalog&vapp=myVapp \
+           /ovfs/myVapp.ovf
+   (Exports a VM from a vCloud instance into an OVF package)
+
