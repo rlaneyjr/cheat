@@ -35,8 +35,8 @@ Examples:
 """
 
 # require the dependencies
-from cheats import sheets, sheet
-from cheats.utils import colorize
+from cheat import sheets, sheet
+from cheat.utils import colorize
 from docopt import docopt
 
 

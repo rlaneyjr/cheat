@@ -18,17 +18,28 @@ setup(
     license = 'GPL3',
     description = 'cheat allows you to create and view interactive cheatsheets',
     long_description = long_description,
+    long_description_content_type = 'text/markdown',
     url = 'https://github.com/rlaneyjr/cheat',
-    packages = [
-        'cheats',
-        'cheats.cheatsheets',
-        'cheats.test',
-    ],
+    # You can just specify package directories manually here if your project is
+    # simple. Or you can use find_packages().
+    #
+    # Alternatively, if you just want to distribute a single Python file, use
+    # the `py_modules` argument instead as follows, which will expect a file
+    # called `my_module.py` to exist:
+    #
+    #py_modules=["cheat/cheat"],
+    #
+    packages = find_packages('cheat', 'cheat.cheatsheets', 'cheat.test'),
+    #packages = [
+    #    'cheat',
+    #    'cheat.cheatsheets',
+    #    'cheat.test',
+    #],
     install_requires = ['docopt', 'pygments'],
     package_data = {
-        'cheats.cheatsheets': [f for f in os.listdir('cheats/cheatsheets') if '.' not in f]
+        'cheat.cheatsheets': [f for f in os.listdir('cheat/cheatsheets') if '.' not in f]
     },
     entry_points = {
-        'console_scripts': ['cheat = cheat'],
+        'console_scripts': ['cheat=cheat.py'],
     },
 )
