@@ -29,17 +29,14 @@ setup(
     #
     #py_modules=["cheat/cheat"],
     #
-    packages = find_packages('cheat', 'cheat.cheatsheets', 'cheat.test'),
-    #packages = [
-    #    'cheat',
-    #    'cheat.cheatsheets',
-    #    'cheat.test',
-    #],
-    install_requires = ['docopt', 'pygments'],
+    packages = ['cheat', 'cheat.cheatsheets', 'cheat.test'],
+    install_requires = ['docopt >= 0.6.2', 'Pygments >= 2.2.0'],
     package_data = {
         'cheat.cheatsheets': [f for f in os.listdir('cheat/cheatsheets') if '.' not in f]
     },
-    entry_points = {
-        'console_scripts': ['cheat=cheat.py'],
-    },
+    #entry_points = {
+    #    'console_scripts': ['cheat=bin/cheat'],
+    #},
+    scripts = ['bin/cheat'],
 )
+
