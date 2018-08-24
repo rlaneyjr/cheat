@@ -1,2 +1,52 @@
+# usage: rename [-h] [-c] [-I] [-l] [-q] [-U] [-v EXCEPT_REGEX] [-t]
+#               [--index-first INDEX_FIRST] [--index-step INDEX_STEP]
+#               [--index-digits INDEX_DIGITS] [--index-pad-with INDEX_PAD_WITH]
+#               [-s] [--selftest [use_directory]]
+#               regex target
+
 # Lowercase all files and folders in current directory
 rename 'y/A-Z/a-z/' *
+
+# OR simply use the -l (lowercase) and -U (UPPERCASE) switches
+rename -l *
+rename -U *
+
+# positional arguments:
+  regex                 regular expression to match files with
+  target                target pattern using references to groups in the
+                        regular expression
+
+# optional arguments:
+  -h, --help            show this help message and exit
+  -c, --copy            copy files instead of renaming
+  -I, --case-insensitive
+                        treat the regular expression as case-insensitive
+  -l, --lower           translate all letters to lower-case
+  -q, --quiet           don't print anything, just return status codes
+  -U, --upper           translate all letters to upper-case
+  -v EXCEPT_REGEX, --except EXCEPT_REGEX
+                        exclude files matching the following regular
+                        expression
+  -t, --test            test only, don't actually rename anything
+  -s, --simple          invokes the simple mode. For more help on its
+                        positional arguments: rename -s --help
+  --selftest [use_directory]
+                        run internal unit tests
+
+# Configuration for the special \(index) reference:
+  --index-first INDEX_FIRST
+                        specifies what number will the first \(index)
+                        substitution contain. Default: 1
+  --index-step INDEX_STEP
+                        specifies what number will be added with each step to
+                        the first value. Negative numbers allowed. Default: 1
+  --index-digits INDEX_DIGITS
+                        specifies how many digits will be used in each
+                        \(index) substitution. If a number has fewer digits,
+                        they will be prefixed by leading zeroes (or another
+                        character, see --index-pad-with). Default: auto (e.g.
+                        path enough digits so that each number uses the same
+                        amount of characters)
+  --index-pad-with INDEX_PAD_WITH
+                        specifies what character will be used for padding.
+                        Default: "0"

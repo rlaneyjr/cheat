@@ -1,0 +1,52 @@
+Apply a configuration to a resource by filename or stdin. The resource name must be specified. This resource will be created if it doesn't exist yet. To use 'apply', always create the resource initially with either 'apply' or 'create --save-config'. 
+
+JSON and YAML formats are accepted. 
+
+Alpha Disclaimer: the --prune functionality is not yet complete. Do not use unless you are aware of what the current state is. See https://issues.k8s.io/34274.
+
+Examples:
+  # Apply the configuration in pod.json to a pod.
+  kubectl apply -f ./pod.json
+  
+  # Apply the JSON passed into stdin to a pod.
+  cat pod.json | kubectl apply -f -
+  
+  # Note: --prune is still in Alpha
+  # Apply the configuration in manifest.yaml that matches label app=nginx and delete all the other resources that are not in the file and match label app=nginx.
+  kubectl apply --prune -f manifest.yaml -l app=nginx
+  
+  # Apply the configuration in manifest.yaml and delete all the other configmaps that are not in the file.
+  kubectl apply --prune -f manifest.yaml --all --prune-whitelist=core/v1/ConfigMap
+
+Available Commands:
+  edit-last-applied Edit latest last-applied-configuration annotations of a resource/object
+  set-last-applied  Set the last-applied-configuration annotation on a live object to match the contents of a file.
+  view-last-applied View latest last-applied-configuration annotations of a resource/object
+
+Options:
+      --all=false: Select all resources in the namespace of the specified resource types.
+      --allow-missing-template-keys=true: If true, ignore any errors in templates when a field or map key is missing in the template. Only applies to golang and jsonpath output formats.
+      --cascade=true: If true, cascade the deletion of the resources managed by this resource (e.g. Pods created by a ReplicationController).  Default true.
+      --dry-run=false: If true, only print the object that would be sent, without sending it.
+  -f, --filename=[]: that contains the configuration to apply
+      --force=false: Only used when grace-period=0. If true, immediately remove resources from API and bypass graceful deletion. Note that immediate deletion of some resources may result in inconsistency or data loss and requires confirmation.
+      --grace-period=-1: Period of time in seconds given to the resource to terminate gracefully. Ignored if negative. Set to 1 for immediate shutdown. Can only be set to 0 when --force is true (force deletion).
+      --include-uninitialized=false: If true, the kubectl command applies to uninitialized objects. If explicitly set to false, this flag overrides other flags that make the kubectl commands apply to uninitialized objects, e.g., "--all". Objects with empty metadata.initializers are regarded as initialized.
+      --openapi-patch=true: If true, use openapi to calculate diff when the openapi presents and the resource can be found in the openapi spec. Otherwise, fall back to use baked-in types.
+  -o, --output='': Output format. One of: json|yaml|name|template|go-template|go-template-file|templatefile|jsonpath|jsonpath-file.
+      --overwrite=true: Automatically resolve conflicts between the modified and live configuration by using values from the modified configuration
+      --prune=false: Automatically delete resource objects, including the uninitialized ones, that do not appear in the configs and are created by either apply or create --save-config. Should be used with either -l or --all.
+      --prune-whitelist=[]: Overwrite the default whitelist with <group/version/kind> for --prune
+      --record=false: Record current kubectl command in the resource annotation. If set to false, do not record the command. If set to true, record the command. If not set, default to updating the existing annotation value only if one already exists.
+  -R, --recursive=false: Process the directory used in -f, --filename recursively. Useful when you want to manage related manifests organized within the same directory.
+  -l, --selector='': Selector (label query) to filter on, supports '=', '==', and '!='.(e.g. -l key1=value1,key2=value2)
+      --template='': Template string or path to template file to use when -o=go-template, -o=go-template-file. The template format is golang templates [http://golang.org/pkg/text/template/#pkg-overview].
+      --timeout=0s: The length of time to wait before giving up on a delete, zero means determine a timeout from the size of the object
+      --validate=true: If true, use a schema to validate the input before sending it
+      --wait=false: If true, wait for resources to be gone before returning. This waits for finalizers.
+
+Usage:
+  kubectl apply -f FILENAME [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
