@@ -1,9 +1,43 @@
+# Vagrant Cheat Sheet
 # Initate Vagrant
 mkdir vag-vm; cd vag-vm
 vagrant init
 
+# Importing Templates/Boxes
+vagrant box add/list
+
 # Add a box to vagrant repo
 vagrant box add hashicorp/precise32
+
+# Start vm 
+vagrant up
+vagrant up xyz
+
+# Hibernate vm
+vagrant suspend
+
+# Resume vm
+vagrant resume
+
+# Shutdown vm
+vagrant halt
+
+# Reload vm
+vagrant reload
+
+# Connect to started instance
+vagrant ssh
+
+# Working with the Virtual Environment
+vagrant status
+vagrant global-status
+vagrant ssh-config
+vagrant provision
+vagrant push
+vagrant share/connect
+
+### Create a Template from a running VM
+vagrant package
 
 # Add a box  Vagrant file
 config.vm.box = "hashicorp/precise32"
@@ -13,18 +47,6 @@ config.vm.network "public_network"
 
 # Add provision script to vagrant file
 config.vm.provision :shell, path: "provision.sh"
-
-# Start vm 
-vagrant up
-
-# Connect to started instance
-vagrant ssh
-
-# Shutdown vm
-vagrant halt
-
-# Hibernate vm
-vagrant suspend
 
 # Set vm to initial state by cleaning all data
 vagrant destroy
