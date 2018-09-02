@@ -1,0 +1,692 @@
+ATOOL(1)                                                              ATOOL(1)
+
+
+
+NAME
+       atool - A script for managing file archives of various types
+
+SYNOPSIS
+       atool [OPTION]... ARCHIVE [FILE]...
+       aunpack [OPTION]... ARCHIVE [FILE]...
+       apack [OPTION]... ARCHIVE [FILE]...
+       als [OPTION]... ARCHIVE [FILE]...
+       acat [OPTION]... ARCHIVE [FILE]...
+       adiff [OPTION]... ARCHIVE ARCHIVE
+       arepack [OPTION]... OLD-ARCHIVE NEW-ARCHIVE
+
+DESCRIPTION
+       This manual page document describes the atool commands.  These commands
+       are used for managing file archives of various types, such as  tar  and
+       Zip  archives.  Each  command can be executed individually or by giving
+       the appropriate options to atool (see OPTIONS below).
+
+       aunpack extracts files from an archive. Often one wants to extract  all
+       files  in  an archive to a single subdirectory.  However, some archives
+       contain multiple files in their root directories. The  aunpack  program
+       overcomes  this  problem  by first extracting files to a unique (tempo-
+       rary) directory, and then moving its contents back  if  possible.  This
+       also prevents local files from being overwritten by mistake.
+
+       apack  creates archives (or compresses files). If no file arguments are
+       specified, filenames to add are read from standard in.
+
+       als lists files in an archive.
+
+       acat extracts files in an archive to standard out.
+
+       adiff generates a diff between two archives using diff(1).
+
+       arepack repacks archives to a different format. It does this  by  first
+       extracting  all  files  of  the old archive into a temporary directory,
+       then packing all files extracted to that directory to the new  archive.
+       Use  the --each (-e) option in combination with --format (-F) to repack
+       multiple archives using a single invocation of atool. Note that arepack
+       will not remove the old archive.
+
+       Unless  the  --format  (-F)  option  is provided, the archive format is
+       determined by the archive file extension. I.e.  an extension  ".tar.gz"
+       or  ".tgz"  means tar+gzip format. Note that the extensions are checked
+       in the order listed in the section ARCHIVE TYPES below, which is why  a
+       file  with  extension ".tar.gz" is considered to a be tar+gzip archive,
+       not a gzip compressed file.
+
+OPTIONS
+       These programs follow the usual GNU  command  line  syntax,  with  long
+       options  starting  with  two  dashes  (`-').   A  summary of options is
+       included below.
+
+       -l, --list
+              List files in archive.  This  option  is  automatically  assumed
+              when als is executed.
+
+       -x, --extract
+              Extract  files  from  archive.   This  option  is  automatically
+              assumed when aunpack is executed.
+
+       -X, --extract-to=PATH
+              Extract files from archive  to  the  specified  directory.  When
+              unpacking  compressed files, PATH may refer to either a filename
+              or an existing directory.
+
+       -a, --add
+              Create archive.  This option is automatically assumed when apack
+              is executed.
+
+       -c, --cat
+              Extract  a  file  from archive to standard out (displaying it on
+              screen).  This option is automatically assumed when acat is exe-
+              cuted.
+
+       -d, --diff
+              Extract  two  archives  and use diff(1) to generate differencies
+              between them.  This option is automatically assumed  when  adiff
+              is executed.
+
+       -e, --each
+              For  each  argument,  execute the specified command. This can be
+              used to quickly extract, list or create multiple  archives  (see
+              EXAMPLES  below).  This option can not be used with the cat com-
+              mand.
+
+       -F, --format=EXTENSION
+              Specify archive format manually (see ARCHIVE TYPES below).
+
+       -S, --simulate
+              Run atool in simulation mode. No changes to the filesystem (i.e.
+              writes)  will  be  made, and all commands that would be executed
+              are displayed  instead.  This  option  can't  be  combined  with
+              --explain (since it implies that already).
+
+              Note that it is not guaranteed that the commands printed in sim-
+              ulation mode will be the same as those executed in non-  simula-
+              tion  mode. This is because some operations depend on what files
+              archives contain, and atool can at this time only determine that
+              by extracting archives.
+
+       -E, --explain
+              Display  commands  executed  by atool. This option can't be com-
+              bined with --simulate.
+
+       -p, --page
+              Run output through a pager, usually pager unless the environment
+              variable PAGER is set.
+
+       -f, --force
+              When  extracting  from  files, allow overwriting of local files.
+              When creating an archive, allow the archive file to be overwrit-
+              ten  if it already exists. Note that it is possible to add files
+              to existing RAR and Zip archives (this is not possible for  many
+              other formats).
+
+       -D, --subdir
+              When  extracting archives, always create a new directory for the
+              archive even if the archive only contains one file in  its  root
+              directory.
+
+       -0, --null
+              If no file arguments are specified when creating or adding files
+              to archives, the list of files will be read  from  standard  in.
+              Normally these filenames are separated by newline, but with this
+              option they are separated by null-bytes. This is useful with the
+              GNU find -print0 option.
+
+       -q, --quiet
+              Decrease  verbosity  level  by  one. This is subtracted from the
+              default verbosity level, or  the  level  specified  with  --ver-
+              bosity.  This  option  may  be  specified more than once to make
+              atool even less verbose.
+
+       -v, --verbose
+              Increase verbosity level by one. This is added  to  the  default
+              verbosity  level,  or the level specified with --verbosity. This
+              option may be specified more than once to make atool  even  more
+              verbose.
+
+       -V, --verbosity=LEVEL
+              Specify  verbosity  level.  The  default level is 1, which means
+              "normal verbosity" - e.g. when creating and extracting from  ar-
+              chives, files will be listed.
+
+       --config=FILE
+              Load  configuration  from  the  specified  file. When using this
+              option, the system-wide and user-wide configuration  files  will
+              not  be  loaded. If the specified file does not exist or can not
+              be read, atool will terminate with an error message.
+
+       -o, --option=KEY=VALUE
+              Override a configuration option. These are applied after reading
+              the configuration files.
+
+              You  can  specify  this  multiple  times  to  override different
+              options.
+
+
+       -O, --format-option=OPTION
+              Send additional options to the archiver  command.  This  can  be
+              useful  when  specifying  compression options for some archives,
+              e.g.
+                      apack -F7z -O-mx=9 archive.7z dir
+              You can specify this multiple times add different options.
+
+       --save-outdir=FILE
+              When extracting files, save the name of the directory which  the
+              archive  was  extracted to to the specified file. If the command
+              was not `extract', or the archive was not  extracted  to  a  new
+              directory,  then  nothing will be written to the specified file.
+              If multiple archives were specified (with  -e),  then  only  the
+              last  directory  that files were extracted to will be written to
+              FILE.
+
+              This option is used internally (see EXAMPLES below).
+
+       --help Show summary of options.
+
+       --version
+              Output version information and exit.
+
+ARCHIVE TYPES
+       Unless the -f (--format) option is  provided,  the  archive  format  is
+       determined  by  the archive file extension. I.e. an extension ".tar.gz"
+       or ".tgz" means tar+gzip format. Note that the extensions  are  checked
+       in the other listed above, which is why a file with extension ".tar.gz"
+       is considered to a tar+gzip archive, not a gzip archive.
+
+       The diff command is supported whenever  the  extract  command  is  sup-
+       ported.
+
+       The supported archive types are:
+
+       tar+gzip (.tar.gz, .tgz)
+              All commands are supported.
+
+       tar+bzip (.tar.bz, .tbz)
+              All commands are supported.
+
+       tar+bzip2 (.tar.bz2, .tbz2)
+              All commands are supported.
+
+       tar+compress (.tar.Z, .tZ)
+              All commands are supported.
+
+       tar+lzop (.tar.lzo, .tzo)
+              All commands are supported.
+
+       tar+lzip (.tar.lz, .tlz)
+              All commands are supported.
+
+       tar+xz (.tar.xz, .txz)
+              All commands are supported.
+
+       tar+7z (.tar.7z, .t7z)
+              All commands are supported.
+
+       tar (.tar)
+              All commands are supported.
+
+       zip (.zip)
+              All commands are supported.
+
+       jar (.jar, .war)
+              List, extract, and add commands are supported.  Cat is supported
+              if use_jar_program is disabled.
+
+       rar (.rar)
+              All commands are supported.
+
+       lha (.lha, .lzh)
+              All commands are supported.
+
+       7z (.7z)
+              Extract, list and add commands are supported.
+
+       alzip (.alz)
+              Extract command is supported.
+
+       ace (.ace)
+              Extract and list commands are supported.
+
+       ar (.a)
+              All commands are supported.
+
+       arj (.arj)
+              List, extract and add commands are supported.
+
+       arc (.arc)
+              All command are supported.  (Note that arc outputs an extra new-
+              line when the cat command is used.)
+
+       rpm (.rpm)
+              Extract and list commands are supported.
+
+       deb (.deb)
+              Extract and list commands are supported.
+
+       cab (.cab)
+              Cat, extract, and list commands are supported.
+
+       gzip (.gz)
+              Cat, extract, and add commands are supported.
+
+       bzip (.bz)
+              Cat, extract, and add commands are supported.
+
+       bzip2 (.bz2)
+              Cat, extract, and add commands are supported.
+
+       compress (.Z)
+              Cat, extract, and add commands are supported.
+
+       lzma (.lzma)
+              Cat, extract, and add commands are supported.
+
+       lzop (.lzo)
+              Extract  and  add commands are supported. The cat command is not
+              supported because lzop does not want to extract files  to  stan-
+              dard out unless the -f flag is given.
+
+       lzip (.lz)
+              Cat, extract, and add commands are supported.
+
+       xz (.xz)
+              Cat, extract, and add commands are supported.
+
+       rzip (.rz)
+              Extract and add commands are supported.
+
+       lrzip (.lrz)
+              Extract and add commands are supported.
+
+       7zip (.7z)
+              All  commands  are  supported.   (Note  that 7z refuses to write
+              extracted files to standard out if standard out is  a  terminal.
+              Use  -p or pipe the output of atool/acat to a pager when reading
+              in a terminal.)
+
+       cpio (.cpio)
+              List, extract and add commands are supported.
+
+
+
+CONFIGURATION
+       Since version 0.8.0, atool can read custom configuration files.  First,
+       hardcoded  defaults in the atool program file are evaluated.  Then sys-
+       tem-wide configuration values are loaded from /etc/atool.conf  if  that
+       file  exists.  Finally,  per-user  configuration values are loaded from
+       .atoolrc in the current user's home directory.
+
+       The format of the configuration files is simple:
+
+              variable value
+
+       Here variable is a variable listed below, and value is the value to as-
+       sociate  the variable with. variable and value should be separated with
+       at least one whitespace (space, tab etc). Empty lines and lines  begin-
+       ning with # are discarded.
+
+       A  value  of  `1'  means that the option is enabled, and `0' that it is
+       disabled. Strings should not be quoted, as they start at the first non-
+       whitespace character and end at the end of the line.
+
+       The options are:
+
+       use_tar_bzip2_option (default: 1)
+              Enable  this  if  you  use  GNU  tar and it supports the --bzip2
+              option for filtering  bzip2'ed  files  through  bzip2.  Versions
+              1.13.6  or  later  of GNU tar support --bzip2. Therefore, if you
+              use GNU tar earlier than 1.13.6, you will need to  disable  this
+              option.
+
+              This  used to be use_tar_j_option but using --bzip2 is more por-
+              table.
+
+       use_tar_lzip_option (default: 0)
+              Enable this if you use GNU tar and it supports the --lzip option
+              for filtering lzip'ed files through lzip. Versions 1.23 or later
+              of GNU tar support --lzip. Therefore, if you use GNU tar earlier
+              than 1.23, you will need to disable this option.
+
+       use_tar_z_option (default: 1)
+              Enable this if you use GNU tar and it supports the -z option for
+              filtering gzipped files through gzip. You will need  to  disable
+              this and use_tar_j_option if you don't use GNU tar.
+
+              Disabling  these  two  options  doesn't  mean  that  atool can't
+              extract bzip2/gzip files. If disabled, atool use a pipe to  send
+              output from bzip2/gzip to tar instead.
+
+              If possible, these options should be enabled since error manage-
+              ment is better when filtering is done by tar.
+
+       use_tar_lzma_option (default: 1)
+              Enable this if you use GNU tar and it supports the --lzma option
+              for  filtering lzma compressed files through lzma. Versions 1.20
+              or later of GNU tar support --lzma.
+
+       use_tar_lzop_option (default: 0)
+              Enable this if you use GNU tar and it supports the --lzop option
+              for  filtering lzop compressed files through lzop. Versions 1.21
+              or later of GNU tar support --lzop.
+
+       use_tar_xz_option (default: 0)
+              Enable this if you use GNU tar and it supports the  --xz  option
+              for  filtering  xz compressed files through xz. Versions 1.22 or
+              later of GNU tar support --xz.
+
+       use_gzip_for_z (default: 1)
+              Enable this if you want to use gzip instead of  uncompress  when
+              decompressing compress'ed files (`.Z' files).
+
+       use_rar_for_unpack (default: 0)
+              Enable  this if you want to always use rar instead of unrar when
+              possible. This makes atool use the rar command  (path_rar)  even
+              when listing and extracting RAR files.
+
+       use_arc_for_unpack (default: 0)
+              Enable  this  if  you  want to always use arc instead of nomarch
+              when possible. This makes atool use the arc  command  (path_arc)
+              even when listing and extracting ARC files.
+
+       use_arj_for_unpack (default: 0)
+              Enable  this if you want to always use arj instead of unarj when
+              possible. This makes atool use the arj command  (path_arj)  even
+              when listing and extracting ARJ files.
+
+       use_find_cpio_print0 (default: 1)
+              Enable  this  if  find supports the -print0 option and cpio sup-
+              ports the -0 option. Without it, it is impossible/harder to make
+              cpio archives of files with newline characters in their names.
+
+       extract_deb_control (default: 1)
+              Debian  .deb  package  files  contain  control  information in a
+              DEBIAN  directory,  especially  the  package's  "control"  file.
+              Enable this if you want the control information to be exctracted
+              during extraction in addition to the normal files.
+
+       strip_unknown_ext (default: 1)
+              Certain types of files are actually archives, but  their  exten-
+              sions  doesn't  tell so. Examples are Open Office documents (Zip
+              files) and Gnumeric documents (gzip'ed files). Since the  exten-
+              sions of those filenames are unknown to atool, they would not be
+              stripped with this option set to 0. The output file in that case
+              would  be  something  like Unpack-XYZW. Setting this option to 1
+              will cause the extension to be stripped instead.
+
+       use_pbzip2 (default: 0)
+              Enable this if you want to use pbzip2 rather than bzip2.  Please
+              not  that if use_tar_bzip2_option is enabled, then bzip2 will be
+              used by tar regardless of the use_pbzip2 option. So if you  want
+              tar  to  use  pbzip2  rather than bzip2, set use_pbzip2 to 1 and
+              use_tar_bzip2_option to 0.
+
+       use_lbzip2 (default: 0)
+              Enable this if you want to use lbzip2 rather than bzip2.  Please
+              not  that if use_tar_bzip2_option is enabled, then bzip2 will be
+              used by tar regardless of the use_lbzip2 option. So if you  want
+              tar  to  use  lbzip2  rather than bzip2, set use_lbzip2 to 1 and
+              use_tar_bzip2_option to 0.
+
+       use_pigz (default: 0)
+              Enable this if you want to use pigz rather  than  gzip.   Please
+              not  that if use_tar_z_option is enabled, then gzip will be used
+              by tar regardless of the use_pigz option. So if you want tar  to
+              use   pigz   rather   than   gzip,   set   use_pigz   to  1  and
+              use_tar_z_option to 0.
+
+       use_plzip (default: 0)
+              Enable this if you want to use plzip rather than  lzip.   Please
+              not  that  if  use_tar_lzip_option is enabled, then lzip will be
+              used by tar regardless of the use_plzip option. So if  you  want
+              tar  to  use  plzip  rather  than  lzip,  set use_plzip to 1 and
+              use_tar_lzip_option to 0.
+
+       use_jar (default: 0)
+              Enable this if you want to use jar for managing jar archives. If
+              you  disable  this  option,  zip will be used (which should work
+              just as well, and probably be faster too).
+
+              This option is disabled by default  since  extracting  files  to
+              standard out (`cat') is not supported by jar.
+
+       use_file (default: 1)
+              Enable  this  if  you  want  atool  to identify file types using
+              file(1) for those files with an unrecognized extension (or  none
+              at all).
+
+       use_file_always (default: 0)
+              Enable  this if you want atool to always identify archives using
+              file(1), regardless of the file extension. Please note that this
+              currently has some drawbacks, such as not being able to identify
+              all archive types (especially tar archives compressed with 7zip,
+              lzop, szip etc).
+
+       tmpdir_name (default: Unpack-%04d)
+              atool  extracts  to a temporary directory created in the current
+              directory so that no files are overwritten. This  variable  con-
+              trolls what name that temporary directory should have.
+
+              The  `%d' string in this variable will be replaced with a random
+              number between 0 and 9999. It is possible change the  format  of
+              this number by using something else than `%d' - see printf(3).
+
+       tmpfile_name (default: Pack-%04d)
+              When  using pbzip2, and creating archives, a temporary file need
+              to be created. This option controls the name of that file.   See
+              tmpdir_name for further details on the format.
+
+       path_pager (default: pager)
+
+       path_jar (default: jar)
+
+       path_tar (default: tar)
+
+       path_zip (default: zip)
+
+       path_unzip (default: unzip)
+
+       path_gzip (default: gzip)
+
+       path_bzip (default: bzip)
+
+       path_bzip2 (default: bzip2)
+
+       path_pbzip2 (default: pbzip2)
+
+       path_compress (default: compress)
+
+       path_lzma (default: lzma)
+
+       path_lzop (default: lzop)
+
+       path_lzip (default: lzip)
+
+       path_rar (default: rar)
+
+       path_unrar (default: unrar)
+
+       path_lbzip2 (default: lbzip2)
+
+       path_pigz (default: pigz)
+
+       path_cabextract (default: cabextract)
+
+       path_7z (default: 7z)
+
+       path_unalz (default: unalz)
+
+       path_lha (default: lha)
+
+       path_unace (default: unace)
+
+       path_ar (default: ar)
+
+       path_arj (default: arj)
+
+       path_unarj (default: unarj)
+
+       path_arc (default: arc)
+
+       path_nomarch (default: nomarch)
+
+       path_rpm (default: rpm)
+
+       path_rpm2cpio (default: rpm2cpio)
+
+       path_dpkg_deb (default: dpkg-deb)
+
+       path_cpio (default: cpio)
+
+       path_file (default: file)
+
+       path_find (default: find)
+
+       path_xargs (default: xargs)
+
+       path_cat (default: cat)
+
+       path_diff (default: diff)
+              These are all paths to the corresponding programs. It is usually
+              best to leave them as is, because that way their  locations  can
+              be looked up from the PATH variable.
+
+       args_diff (default: -ru)
+              This  variable  specifies  command line arguments to pass to the
+              diff command (as specified by path_diff) when using adiff. Space
+              characters separate arguments in this string.
+
+       path_syscfg (default: /etc/atool.conf)
+              (This variable can only be set in the atool program file.)  This
+              variable specifies the directory where the system-wide  configu-
+              ration file is located.
+
+       path_usercfg (default: .atoolrc)
+              (This  variable  can  only  be set in the atool program file and
+              system-wide configuration file.)  This variable specifies  where
+              the  user configuration file is located. Note that if this file-
+              name is relative (i.e. doesn't being with `/'), it will be rela-
+              tive  to the current user's home directory (as determined by the
+              HOME environment variable).
+
+       default_verbosity (default: 1)
+              This is the default verbosity of  atool.  By  using  -q  and  -v
+              options, the verbosity level can be raised and lowered.  Level 1
+              means "normal verbosity" - e.g.  when  creating  and  extracting
+              from archives, files will be listed.
+
+       show_extracted (default: 1)
+              If  this  is set to 1, the aunpack command will always show what
+              file or directory that was extracted. Otherwise that  will  only
+              be  printed  if the archive was extracted to an unexpected loca-
+              tion (as a result of local files already existing or the archive
+              having multiple files in its root directory).
+
+              This can be quite useful in combinatiaon with `default_verbosity
+              0'.  Note that this option will  have  no  effect  when  the  -X
+              option  is used with aunpack, and it has no effect on compressed
+              files.
+
+       keep_compressed (default: 1)
+              When compressing a file with gzip or bzip2, the original (uncom-
+              pressed)  file  is  usually deleted once it has been compressed.
+              I.e. if you compress a file "test" you will end up with only one
+              file, "test.gz".  With this option set to 1, you will make atool
+              keep the original  file  as  well.  The  original  behaviour  is
+              achieved by setting this option to 0.
+
+              This  option also has an equivalent effect on uncompressing com-
+              pressed files. When set to 1,  the  original  (compressed)  file
+              will be kept.  Otherwise it will be deleted.
+
+              Note  however  that  this option has no effect when packing up a
+              compressed file with the -X option  (for  specifying  an  output
+              directory  or  file).  In  that case the original file is always
+              kept.
+
+       decompress_to_cwd (default: 1)
+              When decompressing a file with commands such as gzip  or  bzip2,
+              the decompressed file is usually placed in the same directory as
+              the compressed file. With this option set to 1, the decompressed
+              file is instead placed in the current working directory.
+
+              Note that this option has no effect when -X is used.
+
+
+ENVIRONMENT VARIABLES
+       PAGER  The default pager to use when the -p/--page option is specified.
+
+EXAMPLES
+       To extract all files from archive `foobar.tar.gz' to a subdirectory (or
+       the current directory if it only contains one file):
+            aunpack foobar.tar.gz
+
+       To  extract all files from all `.tar.gz' archives in the current direc-
+       tory:
+            aunpack -e *.tar.gz
+
+       To create a zip archive of two files `foo' and `bar':
+            apack myarchive.zip foo bar
+
+       To display the file `baz' in  the  archive  `myarchive.zip'  through  a
+       pager:
+            acat -p myarchive.zip baz
+
+       To list contents of the rar archive `stuff.rar':
+            als stuff.rar
+
+       To    create   three   archives,   `dir1.tar.gz',   `dir2.tar.gz'   and
+       `dir3.tar.gz', so that the first one contains all files  in  dir1,  the
+       second all in dir2 and the third all dir3:
+            apack -e -F .tar.gz dir1 dir2 dir3
+
+       To  show  all differences between version 2.4.17 and 2.4.18 of the ker-
+       nel:
+            adiff linux-2.4.17.tar.gz linux-2.4.18.tar.gz
+
+       To repack all .tar.gz archives in the current directory to .tar.7z (the
+       old archive will be kept untouched):
+            arepack -F.tar.7z -e *.tar.gz
+
+       Here's  a shell function that will make the aunpack command change into
+       the directory where files were extracted:
+            aunpack () {
+              TMP=`mktemp /tmp/aunpack.XXXXXXXXXX`
+              atool -x --save-outdir=$TMP "$@"
+              DIR="`cat $TMP`"
+              [ "$DIR" != "" -a -d "$DIR" ] && cd "$DIR"
+              rm $TMP
+            }
+       If you don't have the mktemp program, you can replace the  second  line
+       with (note however that this is not entirely safe)
+              TMP="/tmp/atool_outdir.$$"
+
+
+KNOWN BUGS
+       Trying  to  extract gzip and other compressed files without the .gz (or
+       .bz2 etc) extension won't work:
+
+         aunpack: foo: format not known, identifying using file
+         aunpack: foo: format is `gzip'
+         gzip: foo: unknown suffix -- ignored
+
+       This last error above is generated by gzip -d foo.
+
+       If  you  find  a  bug  not   listed   here,   please   report   it   to
+       <oskar@osk.mine.nu>.
+
+REPORTING BUGS
+       Report bugs to <oskar@osk.mine.nu>.
+
+AUTHOR
+       The   author   of  atool  and  this  manual  page  is  Oskar  Liljeblad
+       <oskar@osk.mine.nu>.
+
+COPYRIGHT
+       Copyright (C) 2001, 2002, 2003, 2004, 2005,  2007,  2008,  2009,  2011,
+       2012 Oskar Liljeblad
+
+       This is free software; see the source for copying conditions.  There is
+       NO warranty; not even for MERCHANTABILITY or FITNESS FOR  A  PARTICULAR
+       PURPOSE.
+
+
+
+atool                           August 8, 2009                        ATOOL(1)
