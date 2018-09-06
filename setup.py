@@ -34,9 +34,9 @@ setup(
     package_data = {
         'cheat.cheatsheets': [f for f in os.listdir('cheat/cheatsheets') if '.' not in f]
     },
-    #entry_points = {
-    #    'console_scripts': ['cheat=bin/cheat'],
-    #},
-    scripts = ['bin/cheat'],
+    entry_points = {
+        'console_scripts': ['cheat=bin.cheat:main'],
+    },
+    #scripts = ['bin/cheat'],
 )
 
