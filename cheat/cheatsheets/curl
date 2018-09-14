@@ -1,6 +1,9 @@
 # Download a single file
 curl http://path.to.the/file
 
+# Download a single file and save to the same filename as "file"
+curl -O http://path.to.the/file
+
 # Download a file and specify a new filename
 curl http://example.com/file.zip -o new_file.zip
 
@@ -39,3 +42,6 @@ curl httpbin.org/ip
 
 # Get only the HTTP status code
 curl -o /dev/null -w '%{http_code}\n' -s -I URL
+
+# Get the entire curl manual
+curl -M
