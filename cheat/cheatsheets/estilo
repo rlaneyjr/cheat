@@ -1,0 +1,15 @@
+# Initialize an estilo project in current folder
+estilo init
+
+# Render all the colorschemes and themes
+estilo render
+
+# Open dialog: add more syntax templates
+estilo add-syntax
+
+# Open dialog: add a new Airline style
+estilo add-airline 
+
+# Open dialog: add a new Lightline style
+estilo add-lightline
+
