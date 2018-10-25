@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+cp -r MayccollUtils/Atom Linux-Utils/Atom 
+cp -r MayccollUtils/Bitnami Linux-Utils/Bitnami 
+cp -r MayccollUtils/Css Linux-Utils/Css 
+cp -r MayccollUtils/Drupal/.htaccess Linux-Utils/Drupal/.htaccess 
+cp -r MayccollUtils/Firma.txt Linux-Utils/Firma.txt 
+cp -r MayccollUtils/Javascript Linux-Utils/Javascript 
+cp -r MayccollUtils/Less Linux-Utils/Less 
+cp -r MayccollUtils/Nodejs/exec_unix.node.js Linux-Utils/Nodejs/exec_unix.node.js 
+cp -r MayccollUtils/Nodejs/test.sh Linux-Utils/Nodejs/test.sh 
+cp -r MayccollUtils/Php/test.md Linux-Utils/Php 
+cp -r MayccollUtils/Site Linux-Utils/Site 
+cp -r MayccollUtils/openVpn Linux-Utils/openVpn 
+cp -r MayccollUtils/results Linux-Utils/results 
+
