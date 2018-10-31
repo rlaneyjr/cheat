@@ -1,22 +1,35 @@
-#replace : with new line
+# Replace ":" with new line
 echo $PATH|tr ":" "\n" #equivalent with:
 echo $PATH|tr -t ":" \n 
 
-#remove all occurance of "ab"
+# Remove all occurance of "ab"
 echo aabbcc |tr -d "ab"
-#ouput: cc
+# ouput: cc
 
-#complement "aa"
+# Complement "aa"
 echo aabbccd |tr -c "aa" 1
-#output: aa11111 without new line
-#tip: Complement meaning keep aa,all others are replaced with 1
+# output: aa11111 without new line
+# tip: Complement meaning keep aa,all others are replaced with 1
 
-#complement "ab\n"
+# Complement "ab\n"
 echo aabbccd |tr -c "ab\n" 1
-#output: aabb111 with new line
+# output: aabb111 with new line
 
-#Preserve all alpha(-c). ":-[:digit:] etc" will be translated to "\n". sequeeze mode.
+# Preserve all alpha(-c). ":-[:digit:] etc" will be translated to "\n". sequeeze mode.
 echo $PATH|tr -cs "[:alpha:]" "\n" 
 
-#ordered list to unordered list
+# Ordered list to unordered list
 echo "1. /usr/bin\n2. /bin" |tr -cs " /[:alpha:]\n" "+"
+
+# Create a list of the words in file1, one per line, where a word is taken to be a maximal string of letters.
+tr -cs "[:alpha:]" "\n" < file1
+
+# Translate the contents of file1 to upper-case.
+tr "[:lower:]" "[:upper:]" < file1
+# Preferred over the traditional UNIX idiom of ``tr a-z A-Z'', since it works correctly in all locales.
+
+# Strip out non-printable characters from file1.
+tr -cd "[:print:]" < file1
+
+# Remove diacritical marks from all accented variants of the letter `e':
+tr "[=e=]" "e"
