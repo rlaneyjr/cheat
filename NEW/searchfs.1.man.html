@@ -1,0 +1,86 @@
+
+*SEARCHFS(1)               BSD General Commands Manual              SEARCHFS(1)*
+
+*NAME*
+
+     *searchfs* -- fast filename search on HFS+ and APFS volumes
+
+*SYNOPSIS*
+
+     *searchfs* [*-dfespixnoh*] [*-v* _mount_*___*_point_] _search_*___*_term_
+
+*DESCRIPTION*
+
+     *searchfs* searches for files by name on HFS+ and APFS volumes. Searching
+     takes place at the driver level using the file system catalog via the
+     low-level searchfs() function. This means the volume's entire directory
+     tree can be scanned much faster than with a standard recursive directory
+     search using e.g. find.
+
+     Paths of files and directories with names containing the search term are
+     printed to STDOUT, one path per line. Search is case-insensitive by
+     default
+
+     The following flags are supported:
+
+     *-v,* *--volume*
+              Specify volume to search. Default is the root file system at /.
+
+     *-d,* *--dirs-only*
+              Return only matching directories.
+
+     *-f,* *--files-only*
+              Return only matching files.
+
+     *-e,* *--exact-match*
+              Return only exact filename matches.
+
+     *-s,* *--case-sensitive*
+              Case sensitive matching.
+
+     *-p,* *--skip-packages*
+              Don't match file system objects that are inside a package. A
+              package is defined as a directory whose extension matches one of
+              the extensions that are configured into the kernel by Launch
+              Services.
+
+     *-i,* *--skip-invisibles*
+              Don't match invisible file system objects (that is, objects with
+              the Finder attribute "Invisible" set) or any objects within
+              invisible directories.
+
+     *-x,* *--skip-inappropriate*
+              Don't match any file system objects that are within an "inappro-
+              priate" directory.  Apple's current list of inappropriate direc-
+              tories contains one item: /System.
+
+     *-n,* *--negate-params*
+              List all file system objects that do *not* match the search cri-
+              teria.
+
+     *-o,* *--version*
+              Print program version and exit.
+
+     *-h,* *--help*
+              Print usage and exit.
+
+*EXAMPLES*
+
+     Find directories with name matching 'something' on root volume:
+
+           searchfs -d something
+
+     Find file with the exact name 'file.txt' on volume 'SomeHD':
+
+           searchfs -v /Volumes/SomeHD -e file.txt
+
+*SEE ALSO*
+
+     find(1), locate(1), mdfind(1), searchfs(2)
+
+*AUTHORS*
+
+     Sveinbjorn Thordarson <sveinbjorn@sveinbjorn.org>
+
+Darwin                            Jun 7, 2018                           Darwin
+
