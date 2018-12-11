@@ -1,0 +1,94 @@
+
+CLEAN(1)                  BSD General Commands Manual                 CLEAN(1)
+
+NAME
+     clean -- automatically remove unwanted files
+
+SYNOPSIS
+     clean [-bifloqVw] [-t days] [-eE glob] [-xX exclude] [directory ...]
+
+DESCRIPTION
+     The clean utility searches through the filesystem for "temporary files"
+     which can be deleted safely.
+
+     The options are as follows:
+
+     -b      batch mode: Wait until all subdirectories have been traversed and
+             then prompts to delete the complete list of matching files
+             (default)
+
+     -i      interactive mode: Prompt for deletion of each file as it is
+             found.  Also, allows entire directory trees to be skipped at the
+             prompt.
+
+     -f      force mode: Run the program quietly and automatically delete all
+             matching files.  This switch recommended only for expert users.
+
+     -l      flat mode: Only clean the current directory; do not enter subdi-
+             rectories.
+
+     -o      object files: Add *.o, *.pyc, *.pyo to the list of regex patterns
+             to search for.
+
+     -q      Quiet mode: Do not echo the directory names while traversing the
+             filesystem.
+
+     -V      Version number: Print the version number of the program.
+
+     -t days
+             time mode: only eliminate files that are more than days old.
+
+     -e glob
+             Use this expression without using the the .cleanrc or the default
+             list (as appropriate).  Can be used more than once.
+
+     -E glob
+             Use this expression in addition to the .cleanrc or the default
+             list.  Can be used more than once.
+
+     -x glob
+             Exclude this directory name from the traversal.  This overrides
+             the .cleanrc and the default list.  Can be used more than once.
+
+     -X glob
+             Exclude this directory name from the traversal.  This is in addi-
+             tion to the .cleanrc and the default list.  Can be used more than
+             once.
+
+             If no directory is specified, then clean defaults to the current
+             directory.  Only one of -b, -i, or -f may be specified.  Also, -e
+             and -x may not be used in conjunction with -E and -X.
+
+How globbing works, using your own .cleanrc, and the default .cleanrc:
+     A glob expression may include regular characters as well as "wildcards".
+     For the definition of globbing see the appropriate part of the sh(1) man
+     page.
+
+   To make your own .cleanrc, create a file in your home directory name
+   ".cleanrc" and put in it any glob expressions that you would like clean to
+   look for.  Also, you may put in the names of directories that you want to
+   exclude from the search.  The names of the directories should be prefixed
+   with a `!'.  A `#' at the beginning of a line represents a comment.
+
+   The default .cleanrc would look something like this:
+
+        # Default .cleanrc
+        #
+        # Expressions to match
+        core
+        *~
+        *.BAK
+        *.CKP
+        *.NEW
+        \#*#
+        dead.letter
+        *.otl
+        *.backup
+        # End of default .cleanrc
+
+WARNING
+     This program was written with the express purpose of deleting (unwanted)
+     files.  Please be certain that you understand this program and that you
+     really want to use such an automatic deletion process before you begin.
+
+BSD                              July 4, 2003                              BSD
