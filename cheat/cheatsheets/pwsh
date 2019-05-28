@@ -1,0 +1,78 @@
+# PowerShell Online Help https://aka.ms/pscore6-docs
+# All parameters are case-insensitive.
+
+-Command | -c
+Executes the specified commands (and any parameters) as though they were typed
+at the PowerShell command prompt, and then exits, unless NoExit is specified.
+# pwsh -Command {Get-WinEvent -LogName security}
+# pwsh -command "& {Get-WinEvent -LogName security}"
+
+-ConfigurationName | -config
+Specifies a configuration endpoint in which PowerShell is run.
+# pwsh -ConfigurationName AdminRoles
+
+-CustomPipeName
+Specifies the name to use for an additional IPC server (named pipe) used for debugging 
+and other cross-process communication. This offers a predictable mechanism for connecting
+to other PowerShell instances. Typically used with the CustomPipeName parameter on Enter-PSHostProcess.
+PowerShell instance 1
+# pwsh -CustomPipeName mydebugpipe
+PowerShell instance 2
+# Enter-PSHostProcess -CustomPipeName mydebugpipe
+
+-EncodedCommand | -e | -ec
+Accepts a base64 encoded string version of a command. Use this parameter to submit
+commands to PowerShell that require complex quotation marks or curly braces.
+# $command = 'dir "c:\program files" '
+# $bytes = [System.Text.Encoding]::Unicode.GetBytes($command)
+# $encodedCommand = [Convert]::ToBase64String($bytes)
+# pwsh -encodedcommand $encodedCommand
+
+-ExecutionPolicy | -ex | -ep
+Sets the default execution policy for the current session and saves it
+in the $env:PSExecutionPolicyPreference environment variable.
+# pwsh -ExecutionPolicy RemoteSigned
+
+-File | -f
+Default parameter if no parameters is present but any values is present in the command line.
+Runs the specified script in the local scope ("dot-sourced"), so that the functions
+and variables that the script creates are available in the current session.
+# pwsh HelloWorld.ps1
+
+-InputFormat | -in | -if
+Describes the format of data sent to PowerShell.
+Valid values are "Text" (text strings) or "XML" (serialized CLIXML format).
+
+-Interactive | -i
+Present an interactive prompt to the user. Inverse for NonInteractive parameter.
+
+-NoExit | -noe
+Does not exit after running startup commands.
+# pwsh -NoExit -Command Get-Date
+
+-NoLogo | -nol
+Hides the copyright banner at startup.
+
+-NonInteractive | -noni
+Does not present an interactive prompt to the user. Inverse for Interactive parameter.
+
+-NoProfile | -nop
+Does not load the PowerShell profiles.
+
+-OutputFormat | -o | -of
+Determines how output from PowerShell is formatted. Valid values
+are "Text" (text strings) or "XML" (serialized CLIXML format).
+# pwsh -o XML -c Get-Date
+
+-SettingsFile | -settings
+Overrides the system-wide powershell.config.json settings file for the session.
+By default, system-wide settings are read from the powershell.config.json
+in the $PSHOME directory.
+# pwsh -SettingsFile c:\myproject\powershell.config.json
+
+-WindowStyle | -w
+Sets the window style to Normal, Minimized, Maximized or Hidden.
+
+-WorkingDirectory | -wd
+Sets the working directory at the start of PowerShell given a valid PowerShell directory path.
+# pwsh -WorkingDirectory ~
