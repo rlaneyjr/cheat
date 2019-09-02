@@ -1,0 +1,64 @@
+Troubleshooting General UNIX, Networking
+
+Files, Directories & Disks
+Display the Disk Usage of file sizes under each directory in the current directory
+       du -k * | sort -nr | more   or   du -h . | sort -nr
+Display the files in the directory by file size
+       ls -ltr | sort -nr -k 5
+Display top ten largest files/directories
+       du -hk * | sort -nr | head
+How much space is used for users in kilobytes
+       quot –af
+List the hidden files in current directory
+       ls -a1 | grep "^\."
+How do you find out drive statistics
+       iostat -E
+Change to a directory, which is having very long name
+       cd CDMA_3X_GEN*
+Here original directory name is – “CDMA_3X_GENERATION_DATA”.
+Display the all files recursively with path under current directory
+       find . -depth –print
+Search for strings in all files down the directory tree
+       find . -type f -print | xargs egrep -i "expression”
+Processes
+
+Display what process is using a specific port
+
+       /usr/local/bin/lsof –i :<port>
+Display the processes, which are running under a username
+       ps –aef | grep <username>
+Display the parent/child tree of a process
+       ptree <pid> 		Example: ptree 1267
+Show the working directory of a process
+       pwdx <pid> 		Example: pwdx 1267
+Display the processes current open files
+       pfiles <pid> 		Example: pfiles 1267
+Display the inter-process communication facility status
+       ipcs
+Check process utilization of the CPU
+       prstat -a
+Display the page size of memory
+       pagesize -a
+Networking
+Display Ethernet Address arp table
+       arp -a
+Display the number of active established connections to localhost
+       netstat -a | grep EST
+Display the state of interfaces used for TCP/IP traffic'[BR]]
+
+       netstat –i
+Check speed and duplex of the network connection
+       kstat ce:0 | grep link_
+Check link partner speed capabilities of the network connection
+       kstat ce:0 | grep lp_cap
+Check local speed capabilities of the network connection
+       kstat ce:0 | grep cap_
+Shells, Etc
+Delete blank lines in a file
+       cat sample.txt | grep -v ‘^$’ > new_sample.txt
+Search for a sample string in particular files
+       grep “Debug” *.conf   
+Here grep uses the string “Debug” to search in all files with extension “.conf” under current directory.
+Set the Display automatically for the current new user
+       export DISPLAY=`eval ‘who am i | cut -d"(" -f2 | cut -d")" -f1'`
+Here in above command, see single quote, double quote, grave ascent is used. Observe carefully.
