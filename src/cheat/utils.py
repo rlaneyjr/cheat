@@ -21,7 +21,7 @@ def colorize(sheet_content):
         return sheet_content
 
     first_line = sheet_content.splitlines()[0]
-    lexer      = get_lexer_by_name('bash')
+    lexer      = get_lexer_by_name('markdown')
     if first_line.startswith('```'):
         sheet_content = '\n'.join(sheet_content.split('\n')[1:-2])
         try:
@@ -69,3 +69,4 @@ def open_with_editor(filepath):
 def warn(message):
     """ Prints a message to stderr """
     print((message), file=sys.stderr)
+

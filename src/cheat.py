@@ -35,14 +35,14 @@ Examples:
 """
 
 # require the dependencies
-from cheat import sheets, sheet
-from cheat.utils import colorize
+from .cheat import sheets, sheet
+from .cheat.utils import colorize
 from docopt import docopt
 
 
 if __name__ == '__main__':
     # parse the command-line options
-    options = docopt(__doc__, version='cheat 1.0')
+    options = docopt(__doc__, version='cheat 2.2')
 
     # list directories
     if options['--directories']:

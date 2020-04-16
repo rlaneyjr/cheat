@@ -1,7 +1,7 @@
 import os
 
-from cheat import cheatsheets
-from cheat.utils import die
+from . import cheatsheets
+from .utils import die
 
 def default_path():
     """ Returns the default cheatsheet path """
