@@ -33,33 +33,31 @@ Examples:
   To search for "ssh" among all cheatsheets:
     cheat -s ssh
 """
-
+import sys
 # require the dependencies
-from .cheat import sheets, sheet
-from .cheat.utils import colorize
+from src.cheat import sheets, sheet
+from src.cheat.utils import colorize
 from docopt import docopt
 
 
-if __name__ == '__main__':
+def main():
     # parse the command-line options
     options = docopt(__doc__, version='cheat 2.2')
-
     # list directories
     if options['--directories']:
         print("\n".join(sheets.paths()))
-
     # list cheatsheets
     elif options['--list']:
         print(sheets.list())
-
     # create/edit cheatsheet
     elif options['--edit']:
         sheet.create_or_edit(options['<cheatsheet>'])
-
     # search among the cheatsheets
     elif options['--search']:
         print(colorize(sheets.search(options['<keyword>'])))
-
     # print the cheatsheet
     else:
         print(colorize(sheet.read(options['<cheatsheet>'])))
+
+if __name__ == '__main__':
+    sys.exit(main())
